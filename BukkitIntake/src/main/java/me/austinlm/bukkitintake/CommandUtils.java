@@ -21,24 +21,6 @@ import java.util.Collections;
 public class CommandUtils {
 
     /**
-     * Pass commands from bukkit to intake.
-     *
-     * @param commands dispatcher to pass the command to.
-     * @param sender   sender of the command.
-     * @param cmd      wrapped Command that the sender sent.
-     * @param args     arguments attached to the command.
-     */
-    public void passToFramework(Dispatcher commands, CommandSender sender, org.bukkit.command.Command cmd, String[] args) {
-        try {
-            Namespace namespace = new Namespace();
-            namespace.put(CommandSender.class, sender); //save sender
-            commands.call(cmd.getName() + " " + Joiner.on(" ").join(args), namespace, Collections.<String>emptyList());
-        } catch (Exception e) {
-            handleException(sender, e);
-        }
-    }
-
-    /**
      * Handle all intake exceptions
      *
      * @param sender sender of the command.
@@ -70,6 +52,24 @@ public class CommandUtils {
             } else {
                 handleException(sender, e.getCause());
             }
+        }
+    }
+
+    /**
+     * Pass commands from bukkit to intake.
+     *
+     * @param commands dispatcher to pass the command to.
+     * @param sender   sender of the command.
+     * @param cmd      wrapped Command that the sender sent.
+     * @param args     arguments attached to the command.
+     */
+    public void passToFramework(Dispatcher commands, CommandSender sender, org.bukkit.command.Command cmd, String[] args) {
+        try {
+            Namespace namespace = new Namespace();
+            namespace.put(CommandSender.class, sender); //save sender
+            commands.call(cmd.getName() + " " + Joiner.on(" ").join(args), namespace, Collections.<String>emptyList());
+        } catch (Exception e) {
+            handleException(sender, e);
         }
     }
 }
