@@ -1,12 +1,17 @@
 package me.austinlm.bukkitintake;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.sk89q.intake.CommandException;
 import com.sk89q.intake.InvalidUsageException;
 import com.sk89q.intake.InvocationCommandException;
+import com.sk89q.intake.argument.Namespace;
+import com.sk89q.intake.dispatcher.Dispatcher;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import java.util.Collections;
 
 /**
  * Misc. Utilities
@@ -14,6 +19,24 @@ import org.bukkit.command.CommandSender;
  * @author molen
  */
 public class CommandUtils {
+
+    /**
+     * Pass commands from bukkit to intake.
+     *
+     * @param commands dispatcher to pass the command to.
+     * @param sender   sender of the command.
+     * @param cmd      wrapped Command that the sender sent.
+     * @param args     arguments attached to the command.
+     */
+    public void passToFramework(Dispatcher commands, CommandSender sender, org.bukkit.command.Command cmd, String[] args) {
+        try {
+            Namespace namespace = new Namespace();
+            namespace.put(CommandSender.class, sender); //save sender
+            commands.call(cmd.getName() + " " + Joiner.on(" ").join(args), namespace, Collections.<String>emptyList());
+        } catch (Exception e) {
+            handleException(sender, e);
+        }
+    }
 
     /**
      * Handle all intake exceptions
