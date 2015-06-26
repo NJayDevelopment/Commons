@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake;
+package me.austinlm.intake;
 
 import com.sk89q.intake.parametric.annotation.Classifier;
 

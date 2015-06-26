@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake.registration.provider;
+package me.austinlm.intake.registration.provider;
 
 import com.google.common.collect.Lists;
 import com.sk89q.intake.Command;
@@ -34,7 +34,7 @@ public class CommandProviderFactory {
         }
     }
 
-    public CommandProviderWrapper buildWarappers() {
+    public CommandProviderWrapper buildWrappers() {
         Annotation[][] annotations = baseMethod.getParameterAnnotations();
         for (int i = 0; i < this.baseMethod.getParameters().length; i++) {
             CommandArgumentProviderWrapper wrapper = addParameter(this.baseMethod.getParameters()[i].getType(), Arrays.asList(annotations[i]), this.injector);

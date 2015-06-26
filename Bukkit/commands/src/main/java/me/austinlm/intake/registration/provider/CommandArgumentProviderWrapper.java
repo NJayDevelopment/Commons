@@ -1,12 +1,13 @@
-package main.java.me.austinlm.intake.registration.provider;
+package me.austinlm.intake.registration.provider;
 
 import com.sk89q.intake.parametric.Binding;
 
 
 /**
- * Created by Austin on 6/25/15.
+ * Object that is used to group command arguments with their respective binders.
+ *
+ * @author Austin Mayes
  */
-
 public class CommandArgumentProviderWrapper {
     protected Object argument;
     protected Binding binding;

@@ -1,7 +1,7 @@
-package main.java.me.austinlm.intake.registration;
+package me.austinlm.intake.registration;
 
 import com.sk89q.intake.CommandMapping;
-import main.java.me.austinlm.intake.registration.provider.CommandProviderWrapper;
+import me.austinlm.intake.registration.provider.CommandProviderWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
@@ -76,6 +76,7 @@ public class BukkitCommandRegistrationService {
                 field.setAccessible(true);
                 return (T) field.get(from);
             } catch (Exception e) {
+                return null; // Silence
             }
         }
         return null;

@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake.registration;
+package me.austinlm.intake.registration;
 
 import java.util.List;
 

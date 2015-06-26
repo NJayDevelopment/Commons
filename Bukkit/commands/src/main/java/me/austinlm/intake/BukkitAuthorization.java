@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake;
+package me.austinlm.intake;
 
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.util.auth.Authorizer;
@@ -20,6 +20,6 @@ public class BukkitAuthorization implements Authorizer {
      */
     @Override
     public boolean testPermission(Namespace namespace, String permission) {
-        return namespace.get(CommandSender.class).hasPermission(permission);
+        return namespace.get(CommandSender.class) != null && namespace.get(CommandSender.class).hasPermission(permission);
     }
 }

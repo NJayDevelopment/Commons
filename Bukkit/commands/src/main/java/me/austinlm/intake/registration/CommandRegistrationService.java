@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake.registration;
+package me.austinlm.intake.registration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -11,8 +11,8 @@ import com.sk89q.intake.parametric.Injector;
 import com.sk89q.intake.parametric.Module;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.Authorizer;
-import main.java.me.austinlm.intake.registration.provider.CommandProviderFactory;
-import main.java.me.austinlm.intake.registration.provider.CommandProviderWrapper;
+import me.austinlm.intake.registration.provider.CommandProviderFactory;
+import me.austinlm.intake.registration.provider.CommandProviderWrapper;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class CommandRegistrationService {
             for (Method m : o.getClass().getMethods()) {
                 if (m.getAnnotation(Command.class) == null) continue;
                 CommandProviderFactory factory = new CommandProviderFactory(this.injector, m, m.getAnnotation(Command.class));
-                wrappersForClass.add(factory.buildWarappers());
+                wrappersForClass.add(factory.buildWrappers());
             }
             this.providersByClass.put(o.getClass(), wrappersForClass);
         }

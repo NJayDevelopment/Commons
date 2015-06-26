@@ -1,4 +1,4 @@
-package main.java.me.austinlm.intake.registration.provider;
+package me.austinlm.intake.registration.provider;
 
 import com.sk89q.intake.Command;
 
@@ -6,7 +6,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * Created by Austin on 6/25/15.
+ * Object that is used to represent a command's method, annotation, and arguments.
+ *
+ * @author Austin Mayes
  */
 
 public class CommandProviderWrapper {

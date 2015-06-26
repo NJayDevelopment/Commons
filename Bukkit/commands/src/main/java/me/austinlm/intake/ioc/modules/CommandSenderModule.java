@@ -1,8 +1,8 @@
-package main.java.me.austinlm.intake.ioc.modules;
+package me.austinlm.intake.ioc.modules;
 
 import com.sk89q.intake.parametric.AbstractModule;
-import main.java.me.austinlm.intake.Annotations;
-import main.java.me.austinlm.intake.ioc.providers.CommandSenderProvider;
+import me.austinlm.intake.Annotations;
+import me.austinlm.intake.ioc.providers.CommandSenderProvider;
 import org.bukkit.command.CommandSender;
 
 /**
