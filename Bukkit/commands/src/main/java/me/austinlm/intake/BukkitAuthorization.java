@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake;
+package main.java.me.austinlm.intake;
 
 import com.sk89q.intake.argument.Namespace;
 import com.sk89q.intake.util.auth.Authorizer;

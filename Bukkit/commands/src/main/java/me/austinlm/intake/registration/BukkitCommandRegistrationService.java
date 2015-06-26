@@ -1,7 +1,7 @@
-package me.austinlm.bukkitintake.registration;
+package main.java.me.austinlm.intake.registration;
 
 import com.sk89q.intake.CommandMapping;
-import me.austinlm.bukkitintake.registration.provider.CommandProviderWrapper;
+import main.java.me.austinlm.intake.registration.provider.CommandProviderWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;

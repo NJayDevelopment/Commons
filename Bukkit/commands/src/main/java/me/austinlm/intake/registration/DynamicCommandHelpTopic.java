@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake.registration;
+package main.java.me.austinlm.intake.registration;
 
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;

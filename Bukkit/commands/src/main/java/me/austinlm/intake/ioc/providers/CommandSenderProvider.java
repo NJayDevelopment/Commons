@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake.ioc.providers;
+package main.java.me.austinlm.intake.ioc.providers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -16,15 +16,15 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Provider for a {@link org.bukkit.entity.Player}.
+ * Provider for a {@link org.bukkit.command.CommandSender}.
  *
  * @author Austin Mayes
  */
-public class PlayerProvider implements Provider<Player> {
+public class CommandSenderProvider implements Provider<CommandSender> {
 
     private boolean isProvided;
 
-    public PlayerProvider(boolean isProvided) {
+    public CommandSenderProvider(boolean isProvided) {
         this.isProvided = isProvided;
     }
 
@@ -35,20 +35,15 @@ public class PlayerProvider implements Provider<Player> {
 
     @Nullable
     @Override
-    public Player get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException, ProvisionException {
-        if (isProvided) {
-            try {
-                return (Player) arguments.getNamespace().get(CommandSender.class);
-            } catch (ClassCastException e) {
-                e.printStackTrace();
-                throw new ProvisionException("This isn't a player");
-            }
-        }
-
+    public CommandSender get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException, ProvisionException {
         String name = arguments.next();
-        Player result;
+        CommandSender result;
 
-        result = Bukkit.getPlayer(name);
+        if (isProvided) return arguments.getNamespace().get(CommandSender.class);
+
+        if (name.equalsIgnoreCase("console")) {
+            result = Bukkit.getConsoleSender();
+        } else result = Bukkit.getPlayer(name);
         if (result != null) {
             return result;
         } else {
@@ -59,6 +54,7 @@ public class PlayerProvider implements Provider<Player> {
     @Override
     public List<String> getSuggestions(String prefix) {
         List<String> suggestions = Lists.newArrayList();
+        suggestions.add("console");
         for (Player p : Bukkit.getOnlinePlayers()) {
             suggestions.add(p.getName());
         }

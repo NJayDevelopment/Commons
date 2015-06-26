@@ -1,8 +1,8 @@
-package me.austinlm.bukkitintake.ioc.modules;
+package main.java.me.austinlm.intake.ioc.modules;
 
 import com.sk89q.intake.parametric.AbstractModule;
-import me.austinlm.bukkitintake.Annotations;
-import me.austinlm.bukkitintake.ioc.providers.PlayerProvider;
+import main.java.me.austinlm.intake.Annotations;
+import main.java.me.austinlm.intake.ioc.providers.PlayerProvider;
 import org.bukkit.entity.Player;
 
 /**

@@ -1,9 +1,9 @@
-package me.austinlm.bukkitintake.registration;
+package main.java.me.austinlm.intake.registration;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import me.austinlm.bukkitintake.registration.provider.CommandArgumentProviderWrapper;
-import me.austinlm.bukkitintake.registration.provider.CommandProviderWrapper;
+import main.java.me.austinlm.intake.registration.provider.CommandArgumentProviderWrapper;
+import main.java.me.austinlm.intake.registration.provider.CommandProviderWrapper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;

@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake.registration.provider;
+package main.java.me.austinlm.intake.registration.provider;
 
 import com.sk89q.intake.parametric.Binding;
 

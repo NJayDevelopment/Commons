@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake.registration;
+package main.java.me.austinlm.intake.registration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -11,8 +11,8 @@ import com.sk89q.intake.parametric.Injector;
 import com.sk89q.intake.parametric.Module;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.Authorizer;
-import me.austinlm.bukkitintake.registration.provider.CommandProviderFactory;
-import me.austinlm.bukkitintake.registration.provider.CommandProviderWrapper;
+import main.java.me.austinlm.intake.registration.provider.CommandProviderFactory;
+import main.java.me.austinlm.intake.registration.provider.CommandProviderWrapper;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

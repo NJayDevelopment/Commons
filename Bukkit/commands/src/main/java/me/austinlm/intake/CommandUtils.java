@@ -1,4 +1,4 @@
-package me.austinlm.bukkitintake;
+package main.java.me.austinlm.intake;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
