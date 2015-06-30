@@ -52,7 +52,7 @@ public class PlayerProvider implements Provider<Player> {
         if (result != null) {
             return result;
         } else {
-            throw new ArgumentParseException("Could not find the specified player. NOTE: To reference the console, use 'console'.");
+            throw new ArgumentParseException("Could not find the specified player.");
         }
     }
 
