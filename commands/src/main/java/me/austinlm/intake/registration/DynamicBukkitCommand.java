@@ -2,8 +2,6 @@ package me.austinlm.intake.registration;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.sun.jdi.InvalidTypeException;
 import me.austinlm.intake.registration.provider.CommandArgumentProviderWrapper;
 import me.austinlm.intake.registration.provider.CommandProviderWrapper;
 import org.bukkit.command.Command;
@@ -56,8 +54,9 @@ public class DynamicBukkitCommand extends Command implements PluginIdentifiableC
         String lastWord = args[args.length - 1];
         CommandArgumentProviderWrapper currentArg = this.wrapper.getWrappers().get(args.length - 1);
         List<?> results = currentArg.getBinding().getProvider().getSuggestions(lastWord);
-        if (!(results.get(0) instanceof String)) throw new IllegalArgumentException("Suggestions must be a list of strings.");
-        return (List<String>)results;
+        if (!(results.get(0) instanceof String))
+            throw new IllegalArgumentException("Suggestions must be a list of strings.");
+        return (List<String>) results;
     }
 
     /**

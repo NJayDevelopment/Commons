@@ -12,7 +12,7 @@
     <name>Commons</name>
 
     <modules>
-        <module>bukkit</module>
+        <module>commons-commands</module>
     </modules>
 
     <scm>

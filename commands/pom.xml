@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>commons-bukkit</artifactId>
+        <artifactId>commons</artifactId>
         <groupId>me.austinlm</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>commons-bukkit-commands</artifactId>
+    <artifactId>commons-commands</artifactId>
 
 
     <!--> Repositories <-->
