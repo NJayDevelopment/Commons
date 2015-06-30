@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands;
+package net.njay.commons.commands;
 
 import com.sk89q.intake.parametric.annotation.Classifier;
 

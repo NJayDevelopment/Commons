@@ -1,4 +1,4 @@
-package me.austinlm.commons.countdowns;
+package net.njay.commons.countdowns;
 
 /**
  * Base class for countdowns.

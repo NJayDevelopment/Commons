@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands.registration.provider;
+package net.njay.commons.commands.registration.provider;
 
 import com.sk89q.intake.parametric.Binding;
 

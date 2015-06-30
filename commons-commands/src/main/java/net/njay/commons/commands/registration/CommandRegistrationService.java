@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands.registration;
+package net.njay.commons.commands.registration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -11,8 +11,8 @@ import com.sk89q.intake.parametric.Injector;
 import com.sk89q.intake.parametric.Module;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.Authorizer;
-import me.austinlm.commons.commands.registration.provider.CommandProviderFactory;
-import me.austinlm.commons.commands.registration.provider.CommandProviderWrapper;
+import net.njay.commons.commands.registration.provider.CommandProviderFactory;
+import net.njay.commons.commands.registration.provider.CommandProviderWrapper;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

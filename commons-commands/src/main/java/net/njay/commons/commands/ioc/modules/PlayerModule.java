@@ -1,8 +1,8 @@
-package me.austinlm.commons.commands.ioc.modules;
+package net.njay.commons.commands.ioc.modules;
 
 import com.sk89q.intake.parametric.AbstractModule;
-import me.austinlm.commons.commands.Annotations;
-import me.austinlm.commons.commands.ioc.providers.PlayerProvider;
+import net.njay.commons.commands.Annotations;
+import net.njay.commons.commands.ioc.providers.PlayerProvider;
 import org.bukkit.entity.Player;
 
 /**

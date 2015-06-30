@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands.registration;
+package net.njay.commons.commands.registration;
 
 import java.util.List;
 

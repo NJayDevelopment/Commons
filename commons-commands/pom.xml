@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>commons</artifactId>
-        <groupId>me.austinlm</groupId>
+        <groupId>net.njay</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>commons-commands</artifactId>

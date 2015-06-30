@@ -1,9 +1,9 @@
-package me.austinlm.commons.commands.registration;
+package net.njay.commons.commands.registration;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import me.austinlm.commons.commands.registration.provider.CommandArgumentProviderWrapper;
-import me.austinlm.commons.commands.registration.provider.CommandProviderWrapper;
+import net.njay.commons.commands.registration.provider.CommandArgumentProviderWrapper;
+import net.njay.commons.commands.registration.provider.CommandProviderWrapper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;

@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands.registration;
+package net.njay.commons.commands.registration;
 
 import com.google.common.base.Joiner;
 import org.bukkit.ChatColor;

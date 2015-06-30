@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands.ioc.providers;
+package net.njay.commons.commands.ioc.providers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -16,15 +16,15 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * Provider for a {@link org.bukkit.command.CommandSender}.
+ * Provider for a {@link org.bukkit.entity.Player}.
  *
  * @author Austin Mayes
  */
-public class CommandSenderProvider implements Provider<CommandSender> {
+public class PlayerProvider implements Provider<Player> {
 
     private boolean isProvided;
 
-    public CommandSenderProvider(boolean isProvided) {
+    public PlayerProvider(boolean isProvided) {
         this.isProvided = isProvided;
     }
 
@@ -35,26 +35,30 @@ public class CommandSenderProvider implements Provider<CommandSender> {
 
     @Nullable
     @Override
-    public CommandSender get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException, ProvisionException {
+    public Player get(CommandArgs arguments, List<? extends Annotation> modifiers) throws ArgumentException, ProvisionException {
+        if (isProvided) {
+            try {
+                return (Player) arguments.getNamespace().get(CommandSender.class);
+            } catch (ClassCastException e) {
+                e.printStackTrace();
+                throw new ProvisionException("This isn't a player");
+            }
+        }
+
         String name = arguments.next();
-        CommandSender result;
+        Player result;
 
-        if (isProvided) return arguments.getNamespace().get(CommandSender.class);
-
-        if (name.equalsIgnoreCase("console")) {
-            result = Bukkit.getConsoleSender();
-        } else result = Bukkit.getPlayer(name);
+        result = Bukkit.getPlayer(name);
         if (result != null) {
             return result;
         } else {
-            throw new ArgumentParseException("Could not find the specified player. NOTE: To reference the console, use 'console'.");
+            throw new ArgumentParseException("Could not find the specified player.");
         }
     }
 
     @Override
     public List<String> getSuggestions(String prefix) {
         List<String> suggestions = Lists.newArrayList();
-        suggestions.add("console");
         for (Player p : Bukkit.getOnlinePlayers()) {
             suggestions.add(p.getName());
         }

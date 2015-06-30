@@ -1,4 +1,4 @@
-package me.austinlm.commons.commands;
+package net.njay.commons.commands;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;

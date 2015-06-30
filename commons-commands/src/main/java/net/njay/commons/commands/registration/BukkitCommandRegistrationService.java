@@ -1,7 +1,7 @@
-package me.austinlm.commons.commands.registration;
+package net.njay.commons.commands.registration;
 
 import com.sk89q.intake.CommandMapping;
-import me.austinlm.commons.commands.registration.provider.CommandProviderWrapper;
+import net.njay.commons.commands.registration.provider.CommandProviderWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
