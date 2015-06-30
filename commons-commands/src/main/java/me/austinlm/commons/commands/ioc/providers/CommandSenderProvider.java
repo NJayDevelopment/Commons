@@ -1,4 +1,4 @@
-package me.austinlm.intake.ioc.providers;
+package me.austinlm.commons.commands.ioc.providers;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

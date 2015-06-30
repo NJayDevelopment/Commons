@@ -1,9 +1,9 @@
-package me.austinlm.intake.registration;
+package me.austinlm.commons.commands.registration;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import me.austinlm.intake.registration.provider.CommandArgumentProviderWrapper;
-import me.austinlm.intake.registration.provider.CommandProviderWrapper;
+import me.austinlm.commons.commands.registration.provider.CommandArgumentProviderWrapper;
+import me.austinlm.commons.commands.registration.provider.CommandProviderWrapper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginIdentifiableCommand;

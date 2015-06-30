@@ -1,4 +1,4 @@
-package me.austinlm.intake.registration.provider;
+package me.austinlm.commons.commands.registration.provider;
 
 import com.google.common.collect.Lists;
 import com.sk89q.intake.Command;

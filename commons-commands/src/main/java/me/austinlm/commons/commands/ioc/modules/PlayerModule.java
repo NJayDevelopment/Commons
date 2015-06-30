@@ -1,8 +1,8 @@
-package me.austinlm.intake.ioc.modules;
+package me.austinlm.commons.commands.ioc.modules;
 
 import com.sk89q.intake.parametric.AbstractModule;
-import me.austinlm.intake.Annotations;
-import me.austinlm.intake.ioc.providers.PlayerProvider;
+import me.austinlm.commons.commands.Annotations;
+import me.austinlm.commons.commands.ioc.providers.PlayerProvider;
 import org.bukkit.entity.Player;
 
 /**

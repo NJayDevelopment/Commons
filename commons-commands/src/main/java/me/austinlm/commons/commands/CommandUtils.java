@@ -1,4 +1,4 @@
-package me.austinlm.intake;
+package me.austinlm.commons.commands;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
