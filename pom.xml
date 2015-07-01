@@ -14,6 +14,7 @@
         <module>commons-commands</module>
         <module>commons-countdowns</module>
         <module>commons-ui</module>
+        <module>commons-nms</module>
     </modules>
 
     <scm>
