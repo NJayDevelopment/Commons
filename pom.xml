@@ -16,13 +16,13 @@
     </modules>
 
     <scm>
-        <url>https://github.com/AustinLMayes/Commons</url>
-        <connection>scm:git:https://github.com/AustinLMayes/Commons.git</connection>
+        <url>https://github.com/NJayDevelopment/Commons</url>
+        <connection>scm:git:https://github.com/NJayDevelopment/Commons.git</connection>
     </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/AustinLMayes/Commons/issues</url>
+        <url>https://github.com/NJayDevelopment/Commons/issues</url>
     </issueManagement>
 
     <!--> Repositories <-->
