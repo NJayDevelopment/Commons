@@ -13,7 +13,7 @@
 ####General####
   - [ ] Config
   - [ ] Debug
-  - [ ] Packets
+  - [x] NMS
 
 ####World####
   - [ ] Particles
