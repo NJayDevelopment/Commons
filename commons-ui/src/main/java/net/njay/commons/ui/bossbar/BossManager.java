@@ -14,6 +14,8 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import java.util.HashMap;
 
 /**
+ * Class to manager player-boss interactions.
+ *
  * @author Austin Mayes
  */
 public class BossManager implements Listener {
@@ -34,6 +36,12 @@ public class BossManager implements Listener {
             spawnBoss(bosses.get(e.getPlayer()), e.getPlayer()); // Persistent boss.
     }
 
+    /**
+     * Spawn a boss for a player.
+     *
+     * @param enderEntity boss to spawn.
+     * @param player      player to spawn the boss for.
+     */
     public void spawnBoss(EnderEntity enderEntity, Player player) {
         PacketUtils.sendPacket(player, enderEntity.getSpawnPacket(player.getLocation()));
     }
@@ -50,16 +58,35 @@ public class BossManager implements Listener {
         }
     }
 
+    /**
+     * Update a boss for a player.
+     * You should use this to change text/health, not to only change location.
+     *
+     * @param enderEntity boss to update
+     * @param player player to send the update to.
+     */
     public void updateBoss(EnderEntity enderEntity, Player player) {
         PacketUtils.sendPacket(player, enderEntity.getMetaPacket(enderEntity.getWatcher()));
         moveBoss(player, enderEntity); // Client update.
     }
 
+    /**
+     * Teleport a boss to a nw location.
+     *
+     * @param player player to send the packet to.
+     * @param enderEntity boss to move.
+     */
     public void moveBoss(Player player, EnderEntity enderEntity) {
         PacketUtils.sendPacket(player, enderEntity.getTeleportPacket(player.getLocation()));
     }
 
+    /**
+     * Destroy a boss.
+     * @param player player to send the packet to.
+     * @param enderEntity boss to destroy.
+     */
     public void destroyBoss(Player player, EnderEntity enderEntity) {
         PacketUtils.sendPacket(player, enderEntity.getDestroyPacket());
+        this.bosses.remove(player);
     }
 }

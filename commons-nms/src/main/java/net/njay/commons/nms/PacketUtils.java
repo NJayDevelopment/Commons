@@ -7,6 +7,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class PacketUtils {
+    /**
+     * Send a packet to a player.
+     *
+     * @param p      player to be sent to.
+     * @param packet packet to send.
+     */
     public static void sendPacket(Player p, Object packet) {
         try {
             Object nmsPlayer = NMSUtils.getHandle(p);

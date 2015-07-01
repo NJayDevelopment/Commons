@@ -11,6 +11,12 @@ public class NMSUtils {
 
     public static String version;
 
+    /**
+     * Get the current minecraft server version.
+     * This needs to be called FIRST for any reflection methods to work properly.
+     *
+     * @param plugin plugin to get the bukkit server instance from.
+     */
     public static void getBukkitVersion(Plugin plugin) {
         String name = plugin.getServer().getClass().getPackage().getName();
         String mcVersion = name.substring(name.lastIndexOf('.') + 1);
@@ -18,8 +24,14 @@ public class NMSUtils {
         version = mcVersion + ".";
     }
 
-    public static Class<?> getCraftClass(String ClassName) {
-        String className = "net.minecraft.server." + version + ClassName;
+    /**
+     * Get the minecraft server class for a string.
+     *
+     * @param name name of the class without .class
+     * @return the referenced class.
+     */
+    public static Class<?> getNMSClass(String name) {
+        String className = "net.minecraft.server." + version + name;
         Class<?> c = null;
         try {
             c = Class.forName(className);
@@ -29,6 +41,11 @@ public class NMSUtils {
         return c;
     }
 
+    /**
+     * Get a craft handle for a bukkit world.
+     * @param world world to get the handle for.
+     * @return the craft handle.
+     */
     public static Object getHandle(World world) {
         Object nms_entity = null;
         Method entity_getHandle = ReflectionUtils.getMethod(world.getClass(), "getHandle");
@@ -44,6 +61,11 @@ public class NMSUtils {
         return nms_entity;
     }
 
+    /**
+     * Get a craft handle for a bukkit entity.
+     * @param entity entity to get the handle for.
+     * @return the craft handle.
+     */
     public static Object getHandle(Entity entity) {
         Object nms_entity = null;
         Method entity_getHandle = ReflectionUtils.getMethod(entity.getClass(), "getHandle");

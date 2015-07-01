@@ -22,19 +22,29 @@ public class EnderEntity {
     private Object entity;
     private int entityId;
 
+    /**
+     * Constructor
+     *
+     * @param UIBossBar information for the bar of this entity.
+     */
     public EnderEntity(UIBossBar UIBossBar) {
         this.health = Math.max(0F, Math.min(1F, UIBossBar.getPercent())) * 99.9F + 0.1F; // Fake 0
     }
 
+    /**
+     * Get the constructed spawn packet for this entity.
+     * @param location location to spawn the entity at. NOTE: Will spawn in void.
+     * @return a constructed spawn packet.
+     */
     public Object getSpawnPacket(Location location) {
         this.location = location;
-        Class<?> Entity = NMSUtils.getCraftClass("Entity");
-        Class<?> EntityLiving = NMSUtils.getCraftClass("EntityLiving");
-        Class<?> EntityEnderDragon = NMSUtils.getCraftClass("EntityEnderDragon");
+        Class<?> Entity = NMSUtils.getNMSClass("Entity");
+        Class<?> EntityLiving = NMSUtils.getNMSClass("EntityLiving");
+        Class<?> EntityEnderDragon = NMSUtils.getNMSClass("EntityEnderDragon");
         Object packet = null;
 
         try {
-            entity = EntityEnderDragon.getConstructor(NMSUtils.getCraftClass("World")).newInstance(location.getWorld());
+            entity = EntityEnderDragon.getConstructor(NMSUtils.getNMSClass("World")).newInstance(location.getWorld());
 
             Method setLocation = ReflectionUtils.getMethod(EntityEnderDragon, "setLocation", new Class<?>[]{double.class, double.class, double.class, float.class, float.class});
             setLocation.invoke(entity, location.getX(), BossManager.elevation, location.getZ(), location.getPitch(), location.getYaw());
@@ -60,7 +70,7 @@ public class EnderEntity {
             Method getId = ReflectionUtils.getMethod(EntityEnderDragon, "getId", new Class<?>[]{});
             this.entityId = (Integer) getId.invoke(entity);
 
-            Class<?> PacketPlayOutSpawnEntityLiving = NMSUtils.getCraftClass("PacketPlayOutSpawnEntityLiving");
+            Class<?> PacketPlayOutSpawnEntityLiving = NMSUtils.getNMSClass("PacketPlayOutSpawnEntityLiving");
 
             packet = PacketPlayOutSpawnEntityLiving.getConstructor(new Class<?>[]{EntityLiving}).newInstance(entity);
         } catch (IllegalArgumentException e) {
@@ -80,8 +90,11 @@ public class EnderEntity {
         return packet;
     }
 
+    /**
+     * Get the destroy packet for this entity.
+     */
     public Object getDestroyPacket() {
-        Class<?> PacketPlayOutEntityDestroy = NMSUtils.getCraftClass("PacketPlayOutEntityDestroy");
+        Class<?> PacketPlayOutEntityDestroy = NMSUtils.getNMSClass("PacketPlayOutEntityDestroy");
 
         Object packet = null;
         try {
@@ -104,10 +117,15 @@ public class EnderEntity {
         return packet;
     }
 
+    /**
+     * Get the entity's meta packet.
+     * @param watcher DataWatcher for the entity.
+     * @return the meta packet.
+     */
     public Object getMetaPacket(Object watcher) {
-        Class<?> DataWatcher = NMSUtils.getCraftClass("DataWatcher");
+        Class<?> DataWatcher = NMSUtils.getNMSClass("DataWatcher");
 
-        Class<?> PacketPlayOutEntityMetadata = NMSUtils.getCraftClass("PacketPlayOutEntityMetadata");
+        Class<?> PacketPlayOutEntityMetadata = NMSUtils.getNMSClass("PacketPlayOutEntityMetadata");
 
         Object packet = null;
         try {
@@ -129,9 +147,14 @@ public class EnderEntity {
         return packet;
     }
 
+    /**
+     * Get the entity's teleport packet.
+     * @param loc location to teleport to.
+     * @return the entity's teleport packet.
+     */
     public Object getTeleportPacket(Location loc) {
         this.location = loc;
-        Class<?> PacketPlayOutEntityTeleport = NMSUtils.getCraftClass("PacketPlayOutEntityTeleport");
+        Class<?> PacketPlayOutEntityTeleport = NMSUtils.getNMSClass("PacketPlayOutEntityTeleport");
         Object packet = null;
 
         try {
@@ -153,9 +176,12 @@ public class EnderEntity {
         return packet;
     }
 
+    /**
+     * Get the data watcher for the entity
+     */
     public Object getWatcher() {
-        Class<?> Entity = NMSUtils.getCraftClass("Entity");
-        Class<?> DataWatcher = NMSUtils.getCraftClass("DataWatcher");
+        Class<?> Entity = NMSUtils.getNMSClass("Entity");
+        Class<?> DataWatcher = NMSUtils.getNMSClass("DataWatcher");
 
         Object watcher = null;
         try {
@@ -189,10 +215,6 @@ public class EnderEntity {
         return health;
     }
 
-    public void setHealth(float health) {
-        this.health = health;
-    }
-
     public UIBossBar getUIBossBar() {
         return UIBossBar;
     }
@@ -209,15 +231,7 @@ public class EnderEntity {
         return entity;
     }
 
-    public void setEntity(Object entity) {
-        this.entity = entity;
-    }
-
     public int getEntityId() {
         return entityId;
-    }
-
-    public void setEntityId(int entityId) {
-        this.entityId = entityId;
     }
 }
