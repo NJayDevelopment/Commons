@@ -43,6 +43,7 @@ public class NMSUtils {
 
     /**
      * Get a craft handle for a bukkit world.
+     *
      * @param world world to get the handle for.
      * @return the craft handle.
      */
@@ -63,6 +64,7 @@ public class NMSUtils {
 
     /**
      * Get a craft handle for a bukkit entity.
+     *
      * @param entity entity to get the handle for.
      * @return the craft handle.
      */

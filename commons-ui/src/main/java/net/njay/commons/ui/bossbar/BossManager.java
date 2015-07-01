@@ -63,7 +63,7 @@ public class BossManager implements Listener {
      * You should use this to change text/health, not to only change location.
      *
      * @param enderEntity boss to update
-     * @param player player to send the update to.
+     * @param player      player to send the update to.
      */
     public void updateBoss(EnderEntity enderEntity, Player player) {
         PacketUtils.sendPacket(player, enderEntity.getMetaPacket(enderEntity.getWatcher()));
@@ -73,7 +73,7 @@ public class BossManager implements Listener {
     /**
      * Teleport a boss to a nw location.
      *
-     * @param player player to send the packet to.
+     * @param player      player to send the packet to.
      * @param enderEntity boss to move.
      */
     public void moveBoss(Player player, EnderEntity enderEntity) {
@@ -82,7 +82,8 @@ public class BossManager implements Listener {
 
     /**
      * Destroy a boss.
-     * @param player player to send the packet to.
+     *
+     * @param player      player to send the packet to.
      * @param enderEntity boss to destroy.
      */
     public void destroyBoss(Player player, EnderEntity enderEntity) {

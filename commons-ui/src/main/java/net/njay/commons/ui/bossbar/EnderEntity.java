@@ -33,6 +33,7 @@ public class EnderEntity {
 
     /**
      * Get the constructed spawn packet for this entity.
+     *
      * @param location location to spawn the entity at. NOTE: Will spawn in void.
      * @return a constructed spawn packet.
      */
@@ -119,6 +120,7 @@ public class EnderEntity {
 
     /**
      * Get the entity's meta packet.
+     *
      * @param watcher DataWatcher for the entity.
      * @return the meta packet.
      */
@@ -149,6 +151,7 @@ public class EnderEntity {
 
     /**
      * Get the entity's teleport packet.
+     *
      * @param loc location to teleport to.
      * @return the entity's teleport packet.
      */

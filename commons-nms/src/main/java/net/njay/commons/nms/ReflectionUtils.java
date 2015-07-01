@@ -25,9 +25,10 @@ public class ReflectionUtils {
 
     /**
      * Get a method from a class with the matching parameter types.
-     * @param cl class to get the method from.
+     *
+     * @param cl     class to get the method from.
      * @param method name of the method.
-     * @param args array of classes that the method accepts as parameters (in order).
+     * @param args   array of classes that the method accepts as parameters (in order).
      * @return the method.
      */
     public static Method getMethod(Class<?> cl, String method, Class<?>[] args) {
@@ -41,9 +42,10 @@ public class ReflectionUtils {
 
     /**
      * Get a method from a class with the specified number of arguments.
-     * @param cl class to get the method from.
+     *
+     * @param cl     class to get the method from.
      * @param method name of the method.
-     * @param args number of arguments the method has.
+     * @param args   number of arguments the method has.
      * @return the method.
      */
     public static Method getMethod(Class<?> cl, String method, Integer args) {
@@ -57,7 +59,8 @@ public class ReflectionUtils {
 
     /**
      * Get a method from a class.
-     * @param cl class to get the method from.
+     *
+     * @param cl     class to get the method from.
      * @param method name of the method.
      * @return the method.
      */
@@ -72,6 +75,7 @@ public class ReflectionUtils {
 
     /**
      * Used to check if a list of classes is equal.
+     *
      * @param l1 list #1
      * @param l2 list #2
      * @return if the lists have the same values.
