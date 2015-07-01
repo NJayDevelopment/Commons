@@ -27,5 +27,5 @@
   - [ ] Title
   - [ ] Tab
   - [ ] Scoreboard
-  - [ ] Boss Bar
+  - [X] Boss Bar
   - [ ] Action Bar
