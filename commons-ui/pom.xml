@@ -12,6 +12,14 @@
     <artifactId>commons-ui</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.njay</groupId>
+            <artifactId>commons-nms</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
