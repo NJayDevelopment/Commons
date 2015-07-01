@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  */
 public class Annotations {
     /**
-     * A supplied value that is provided in the {@link com.sun.org.apache.xml.internal.utils.NameSpace}.
+     * A supplied value that is provided in the {@link com.sk89q.intake.argument.Namespace}.
      */
     @Classifier()
     @Retention(RetentionPolicy.RUNTIME)
