@@ -21,7 +21,7 @@
 
 ####Chat####
   - [ ] Chat Channels
-  - [ ] Chat JSON Stuff
+  - [x] Chat JSON Stuff
 
 ####UI####
   - [ ] Title
