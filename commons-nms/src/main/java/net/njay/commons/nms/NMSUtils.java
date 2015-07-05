@@ -82,4 +82,23 @@ public class NMSUtils {
         }
         return nms_entity;
     }
+
+    /**
+     * Gets a {@link Class} object representing a type contained within the {@code org.bukkit.craftbukkit} versioned package.
+     * The class instances returned by this method are cached, such that no lookup will be done twice (unless multiple threads are accessing this method simultaneously).
+     *
+     * @param className The name of the class, excluding the package, within OBC. This name may contain a subpackage name, such as {@code inventory.CraftItemStack}.
+     * @return The class instance representing the specified CraftBukkit class, or {@code null} if it could not be loaded.
+     */
+    public synchronized static Class<?> getCraftClass(String className) {
+        String fullName = "org.bukkit.craftbukkit." + version + className;
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(fullName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return clazz;
+    }
 }

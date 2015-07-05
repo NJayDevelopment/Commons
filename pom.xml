@@ -8,13 +8,13 @@
     <artifactId>commons</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Commons</name>
 
     <modules>
         <module>commons-commands</module>
         <module>commons-countdowns</module>
         <module>commons-ui</module>
         <module>commons-nms</module>
+        <module>commons-chat</module>
     </modules>
 
     <scm>
