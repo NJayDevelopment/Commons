@@ -41,6 +41,23 @@ public class ReflectionUtils {
     }
 
     /**
+     * Get a method from a class with the matching parameter types.
+     *
+     * @param cl     class to get the method from.
+     * @param method name of the method.
+     * @param args   array of classes that the method accepts as parameters (in order).
+     * @return the method.
+     */
+    public static Method getMethod_(Class<?> cl, String method, Class... args) {
+        for (Method m : cl.getMethods()) {
+            if (m.getName().equals(method) && classListEqual(args, m.getParameterTypes())) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get a method from a class with the specified number of arguments.
      *
      * @param cl     class to get the method from.
