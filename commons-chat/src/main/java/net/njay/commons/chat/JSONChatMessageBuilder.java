@@ -690,6 +690,11 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
     }
 
     private Object createChatPacket(String json) throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+        Object serializedChatComponent = getBaseComponent(json);
+        return nmsPacketPlayOutChatConstructor.newInstance(serializedChatComponent);
+    }
+
+    public Object getBaseComponent(String json) throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
         if (nmsChatSerializerGsonInstance == null) {
             // Find the field and its value, completely bypassing obfuscation
             Class<?> chatSerializerClazz;
@@ -721,9 +726,7 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
 
         // Since the method is so simple, and all the obfuscated methods have the same name, it's easier to reimplement 'IChatBaseComponent a(String)' than to reflectively call it
         // Of course, the implementation may change, but fuzzy matches might break with signature changes
-        Object serializedChatComponent = fromJsonMethod.invoke(nmsChatSerializerGsonInstance, json, NMSUtils.getNMSClass("IChatBaseComponent"));
-
-        return nmsPacketPlayOutChatConstructor.newInstance(serializedChatComponent);
+        return fromJsonMethod.invoke(nmsChatSerializerGsonInstance, json, NMSUtils.getNMSClass("IChatBaseComponent"));
     }
 
     /**
