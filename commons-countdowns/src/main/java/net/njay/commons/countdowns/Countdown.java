@@ -41,7 +41,9 @@ public abstract class Countdown {
     /**
      * If the countdown should be displayed.
      */
-    public abstract boolean shouldDisplay();
+    public boolean shouldDisplay() {
+        return true;
+    }
 
     /**
      * If the countdown is running.
@@ -62,7 +64,10 @@ public abstract class Countdown {
     /**
      * Take any measures to display the countdown to users.
      * Implementers need to check {@link #shouldDisplay}
+     *
+     * @param left time left.
+     * @param total total time the countdown will run.
      */
-    public void display() {
+    public void display(int left, int total) {
     }
 }

@@ -694,6 +694,10 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         return nmsPacketPlayOutChatConstructor.newInstance(serializedChatComponent);
     }
 
+    public Object getBaseComponent() throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
+        return getBaseComponent(this.toJSONString());
+    }
+
     public Object getBaseComponent(String json) throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
         if (nmsChatSerializerGsonInstance == null) {
             // Find the field and its value, completely bypassing obfuscation

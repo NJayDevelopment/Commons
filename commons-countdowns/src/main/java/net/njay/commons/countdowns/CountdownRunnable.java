@@ -44,10 +44,12 @@ public class CountdownRunnable implements Runnable {
     public void run() {
         if (this.timeLeft <= 0) {
             this.countdown.onEnd();
+            this.countdown.display(this.timeLeft, this.totalTime);
             this.countdown.setRunning(false);
             stop();
         } else {
             this.countdown.onTick(this.timeLeft);
+            this.countdown.display(this.timeLeft, this.totalTime);
             this.timeLeft--;
         }
     }
