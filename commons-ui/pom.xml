@@ -18,6 +18,16 @@
             <artifactId>commons-nms</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>net.njay</groupId>
+            <artifactId>commons-chat</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>net.njay</groupId>
+            <artifactId>commons-countdowns</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

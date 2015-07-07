@@ -65,7 +65,7 @@ public abstract class Countdown {
      * Take any measures to display the countdown to users.
      * Implementers need to check {@link #shouldDisplay}
      *
-     * @param left time left.
+     * @param left  time left.
      * @param total total time the countdown will run.
      */
     public void display(int left, int total) {
