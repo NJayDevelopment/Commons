@@ -1,6 +1,7 @@
 package net.njay.commons.ui.bossbar;
 
 import com.google.common.collect.Maps;
+import net.njay.commons.debug.DebuggingService;
 import net.njay.commons.nms.PacketUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
 
@@ -22,6 +24,21 @@ public class BossManager implements Listener {
     public static double elevation = -500D;
     public static int renderDistance = 32;
     private HashMap<Player, EnderEntity> bosses = Maps.newHashMap();
+    private DebuggingService service;
+    private Plugin owner;
+
+    public BossManager(Plugin owner, DebuggingService service) {
+        this.owner = owner;
+        this.service = service == null ? new DebuggingService(owner.getLogger()) : service;
+    }
+
+    public static double getElevation() {
+        return elevation;
+    }
+
+    public static int getRenderDistance() {
+        return renderDistance;
+    }
 
     @EventHandler
     public void handlePlayerRespawn(PlayerRespawnEvent event) {
@@ -43,7 +60,11 @@ public class BossManager implements Listener {
      * @param player      player to spawn the boss for.
      */
     public void spawnBoss(EnderEntity enderEntity, Player player) {
+        try {
         PacketUtils.sendPacket(player, enderEntity.getSpawnPacket(player.getLocation()));
+        } catch (Exception e) {
+            this.service.log(e);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -66,7 +87,11 @@ public class BossManager implements Listener {
      * @param player      player to send the update to.
      */
     public void updateBoss(EnderEntity enderEntity, Player player) {
-        PacketUtils.sendPacket(player, enderEntity.getMetaPacket(enderEntity.getWatcher()));
+        try {
+            PacketUtils.sendPacket(player, enderEntity.getMetaPacket(enderEntity.getWatcher()));
+        } catch (Exception e) {
+            this.service.log(e);
+        }
         moveBoss(player, enderEntity); // Client update.
     }
 
@@ -77,7 +102,11 @@ public class BossManager implements Listener {
      * @param enderEntity boss to move.
      */
     public void moveBoss(Player player, EnderEntity enderEntity) {
-        PacketUtils.sendPacket(player, enderEntity.getTeleportPacket(player.getLocation()));
+        try {
+            PacketUtils.sendPacket(player, enderEntity.getTeleportPacket(player.getLocation()));
+        } catch (Exception e) {
+            this.service.log(e);
+        }
     }
 
     /**
@@ -87,7 +116,23 @@ public class BossManager implements Listener {
      * @param enderEntity boss to destroy.
      */
     public void destroyBoss(Player player, EnderEntity enderEntity) {
-        PacketUtils.sendPacket(player, enderEntity.getDestroyPacket());
+        try {
+            PacketUtils.sendPacket(player, enderEntity.getDestroyPacket());
+        } catch (Exception e) {
+            this.service.log(e);
+        }
         this.bosses.remove(player);
+    }
+
+    public HashMap<Player, EnderEntity> getBosses() {
+        return bosses;
+    }
+
+    public DebuggingService getService() {
+        return service;
+    }
+
+    public Plugin getOwner() {
+        return owner;
     }
 }

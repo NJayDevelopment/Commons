@@ -4,8 +4,6 @@ import net.njay.commons.chat.JSONChatMessageBuilder;
 import net.njay.commons.nms.NMSUtils;
 import org.bukkit.ChatColor;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * Class to represent an action bar.
  *
@@ -13,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class UIActionBar {
     private Object baseComponent;
+    private ActionBarManager manager;
 
     /**
      * Constructor
@@ -31,20 +30,8 @@ public class UIActionBar {
     public UIActionBar(String json) {
         try {
             this.baseComponent = JSONChatMessageBuilder.deserialize(json).getBaseComponent();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            manager.getService().log(e);
         }
     }
 
@@ -58,20 +45,8 @@ public class UIActionBar {
         JSONChatMessageBuilder builder = new JSONChatMessageBuilder(text).color(color == null ? ChatColor.WHITE : color);
         try {
             this.baseComponent = builder.getBaseComponent();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            manager.getService().log(e);
         }
     }
 
@@ -88,25 +63,22 @@ public class UIActionBar {
      * Get the packet that will display the bar.
      */
     public Object getPacket() {
-        Class<?> PacketPlayOutChat = NMSUtils.getNMSClass("PacketPlayOutChat");
-        Object packet = null;
-
         try {
+            Class<?> PacketPlayOutChat = NMSUtils.getNMSClass("PacketPlayOutChat");
+            Object packet = null;
             packet = PacketPlayOutChat.getConstructor(new Class<?>[]{NMSUtils.getNMSClass("IChatBaseComponent"), byte.class}).newInstance(this.getBaseComponent(), (byte) 2);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            return packet;
+        } catch (Exception e) {
+            manager.getService().log(e);
         }
+        return null;
+    }
 
-        return packet;
+    public ActionBarManager getManager() {
+        return manager;
+    }
+
+    public void setManager(ActionBarManager manager) {
+        this.manager = manager;
     }
 }

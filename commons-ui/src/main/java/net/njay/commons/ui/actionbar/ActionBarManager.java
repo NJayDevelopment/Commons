@@ -3,6 +3,7 @@ package net.njay.commons.ui.actionbar;
 import com.google.common.collect.Lists;
 import net.njay.commons.countdowns.Countdown;
 import net.njay.commons.countdowns.CountdownManager;
+import net.njay.commons.debug.DebuggingService;
 import net.njay.commons.nms.PacketUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,15 +19,17 @@ public class ActionBarManager {
     private List<PacketRepeater> active = Lists.newArrayList();
     private JavaPlugin owner;
     private CountdownManager countdownManager;
+    private DebuggingService service;
 
     /**
      * Constructor
      *
      * @param owner plugin that runs the bars.
      */
-    public ActionBarManager(JavaPlugin owner) {
+    public ActionBarManager(JavaPlugin owner, DebuggingService service) {
         this.owner = owner;
-        this.countdownManager = new CountdownManager(owner);
+        this.service = service == null ? new DebuggingService(owner.getLogger()) : service;
+        this.countdownManager = new CountdownManager(owner, this.service);
     }
 
     /**
@@ -136,11 +139,27 @@ public class ActionBarManager {
      * @param player to display to.
      */
     public void display(UIActionBar bar, Player player) {
-        PacketUtils.sendPacket(player, bar.getPacket());
+        try {
+            PacketUtils.sendPacket(player, bar.getPacket());
+        } catch (Exception e) {
+            service.log(e);
+        }
     }
 
     public JavaPlugin getOwner() {
         return owner;
+    }
+
+    public CountdownManager getCountdownManager() {
+        return countdownManager;
+    }
+
+    public DebuggingService getService() {
+        return service;
+    }
+
+    public void setService(DebuggingService service) {
+        this.service = service;
     }
 
     /**
@@ -177,7 +196,11 @@ public class ActionBarManager {
 
         @Override
         public void display(int left, int total) {
-            PacketUtils.sendPacket(player, bar.getPacket());
+            try {
+                PacketUtils.sendPacket(player, bar.getPacket());
+            } catch (Exception e) {
+                service.log(e);
+            }
         }
 
         public Player getPlayer() {
