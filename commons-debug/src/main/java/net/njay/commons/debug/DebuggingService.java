@@ -57,6 +57,18 @@ public class DebuggingService {
         log(LogLevel.WARNING, ExceptionUtils.getFullStackTrace(e));
     }
 
+    public void log(LogLevel level, String string, Exception e) {
+        log(level, string + " " + ExceptionUtils.getFullStackTrace(e));
+    }
+
+    public void log(String string, Exception e) {
+        log(LogLevel.WARNING, string, e);
+    }
+
+    public void log(LogLevel level, Exception e) {
+        log(level, "", e);
+    }
+
     public void log(LogLevel level, String string, Object instance) {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
         Class clazz = elements[elements.length - 1].getClass();
