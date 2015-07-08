@@ -1,6 +1,7 @@
 package net.njay.commons.countdowns;
 
 import com.google.common.base.Preconditions;
+import net.njay.commons.debug.DebuggingService;
 import org.bukkit.plugin.Plugin;
 
 /**
@@ -14,6 +15,7 @@ public class CountdownRunnable implements Runnable {
     protected int timeLeft = 0;
     protected int totalTime;
     protected Plugin plugin;
+    protected CountdownManager manager;
 
     /**
      * Constructor
@@ -21,12 +23,13 @@ public class CountdownRunnable implements Runnable {
      * @param plugin    plugin that will be scheduled with.
      * @param countdown countdown associated with this runnable.
      */
-    public CountdownRunnable(Plugin plugin, Countdown countdown) {
+    public CountdownRunnable(Plugin plugin, Countdown countdown, CountdownManager manager) {
         Preconditions.checkNotNull(plugin, "plugin can't be null");
         Preconditions.checkNotNull(countdown, "countdown can't be null");
 
         this.countdown = countdown;
         this.plugin = plugin;
+        this.manager = manager;
     }
 
     /**
@@ -42,6 +45,7 @@ public class CountdownRunnable implements Runnable {
      * Called on every tick.
      */
     public void run() {
+        manager.getService().log(DebuggingService.LogLevel.INFO, "tick", this);
         if (this.timeLeft <= 0) {
             this.countdown.onEnd();
             this.countdown.display(this.timeLeft, this.totalTime);

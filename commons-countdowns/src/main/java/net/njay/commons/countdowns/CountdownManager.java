@@ -1,6 +1,7 @@
 package net.njay.commons.countdowns;
 
 import com.google.common.collect.Maps;
+import net.njay.commons.debug.DebuggingService;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -13,13 +14,16 @@ import java.util.HashMap;
 public class CountdownManager {
     HashMap<Countdown, CountdownRunnable> countdowns = Maps.newHashMap();
     Plugin owner;
+    DebuggingService service;
 
     /**
      * Constructor
      *
      * @param owner Bukkit plugin that tasks should be scheduled with.
+     * @param service to debug to. (Optional)
      */
-    public CountdownManager(Plugin owner) {
+    public CountdownManager(Plugin owner, DebuggingService service) {
+        this.service = service == null ? new DebuggingService(owner.getLogger()) : service;
         this.owner = owner;
     }
 
@@ -86,5 +90,13 @@ public class CountdownManager {
         if (runnable != null) {
             runnable.cancel();
         }
+    }
+
+    public DebuggingService getService() {
+        return service;
+    }
+
+    public void setService(DebuggingService service) {
+        this.service = service;
     }
 }
