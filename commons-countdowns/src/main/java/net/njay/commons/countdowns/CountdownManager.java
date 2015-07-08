@@ -45,7 +45,7 @@ public class CountdownManager {
      * @param startNow  if the countdown should start now.
      */
     public void addCountdown(Countdown countdown, int time, boolean startNow) {
-        CountdownRunnable runnable = new CountdownRunnable(this.owner, countdown);
+        CountdownRunnable runnable = new CountdownRunnable(this.owner, countdown, this);
         if (startNow) runnable = runnable.start(time);
         this.countdowns.put(countdown, runnable);
     }
