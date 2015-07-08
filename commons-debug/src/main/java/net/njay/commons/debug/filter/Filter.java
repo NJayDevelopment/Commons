@@ -6,11 +6,12 @@ package net.njay.commons.debug.filter;
  * @author Austin Mayes
  */
 public interface Filter {
-    public FilterResponse check(Object toCheck) throws InvalidSuppliedValueException;
+    public FilterResponse check(Object toCheck);
 
     public enum FilterResponse {
         SHOW,
-        HIDE;
+        HIDE,
+        ABSTAIN;
 
         public boolean shouldShow() {
             return this.equals(SHOW);

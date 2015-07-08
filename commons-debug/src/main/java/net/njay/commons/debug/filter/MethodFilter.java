@@ -15,13 +15,14 @@ public class MethodFilter implements Filter {
     }
 
     @Override
-    public FilterResponse check(Object toCheck) throws InvalidSuppliedValueException {
+    public FilterResponse check(Object toCheck) {
         try {
             Method m = (Method) toCheck;
             if (m.equals(this.toCheckAgainst)) return FilterResponse.SHOW;
             else return FilterResponse.HIDE;
         } catch (ClassCastException e) {
-            throw new InvalidSuppliedValueException(toCheck, this);
+            // Not the correct filter, silently ignore.
         }
+        return FilterResponse.ABSTAIN;
     }
 }

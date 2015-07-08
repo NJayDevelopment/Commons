@@ -3,8 +3,8 @@ package net.njay.commons.debug;
 import com.google.common.collect.Lists;
 import net.njay.commons.debug.filter.ClassFilter;
 import net.njay.commons.debug.filter.Filter;
-import net.njay.commons.debug.filter.InvalidSuppliedValueException;
 import net.njay.commons.debug.filter.MethodFilter;
+import net.njay.commons.debug.filter.NoneFilter;
 import net.njay.commons.nms.ReflectionUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -57,32 +57,27 @@ public class DebuggingService {
         log(LogLevel.WARNING, ExceptionUtils.getFullStackTrace(e));
     }
 
-    /**
-     * Log to the logger
-     *
-     * @param level  of the error.
-     * @param string to log.
-     */
-    public void log(LogLevel level, String string) {
+    public void log(LogLevel level, String string, Object instance) {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
         Class clazz = elements[elements.length - 1].getClass();
         Method method = ReflectionUtils.getMethod(clazz, elements[elements.length - 1].getMethodName());
-        try {
-            if (this.filters != null) {
-                for (Filter filter : this.filters) {
-                    if (filter.getClass().equals(MethodFilter.class)) {
-                        if (filter.check(method).shouldHide()) return;
-                    }
-
-                    if (filter.getClass().equals(ClassFilter.class)) {
-                        if (filter.check(clazz).shouldHide()) return;
-                    }
-                }
+        if (this.filters != null) {
+            for (Filter filter : this.filters) {
+                if (filter.getClass().equals(NoneFilter.class)) return;
+                else if (filter.getClass().equals(MethodFilter.class) && filter.check(method).shouldHide()) return;
+                else if (filter.getClass().equals(ClassFilter.class) && filter.check(clazz).shouldHide()) return;
+                else if (filter.check(instance).shouldHide()) return;
             }
-        } catch (InvalidSuppliedValueException e) {
-            log(e);
         }
-        this.logger.log(Level.ALL, "[" + level.name() + "]" + string);
+        this.logger.log(Level.ALL, "[" + level.name() + "]" + (instance == null ? "" : " Object Instance: " + instance) + (string == null ? "" : " Message:" + string));
+    }
+
+    public void log(LogLevel level, Object instance) {
+        log(level, null, instance);
+    }
+
+    public void log(LogLevel level, String string) {
+        log(level, string, null);
     }
 
     public Logger getLogger() {
