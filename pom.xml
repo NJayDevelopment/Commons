@@ -15,6 +15,7 @@
         <module>commons-ui</module>
         <module>commons-nms</module>
         <module>commons-chat</module>
+        <module>commons-debug</module>
     </modules>
 
     <scm>
