@@ -1,10 +1,15 @@
 package net.njay.commons.debug;
 
-import com.google.common.collect.Maps;
+import com.google.common.collect.Lists;
+import net.njay.commons.debug.filter.ClassFilter;
+import net.njay.commons.debug.filter.Filter;
+import net.njay.commons.debug.filter.InvalidSuppliedValueException;
+import net.njay.commons.debug.filter.MethodFilter;
+import net.njay.commons.nms.ReflectionUtils;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import java.util.LinkedHashMap;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,9 +22,9 @@ import java.util.logging.Logger;
  */
 public class DebuggingService {
 
-    private LinkedHashMap<FilterMode, List<Class<?>>> filters = Maps.newLinkedHashMap();
+    private List<Filter> filters = Lists.newArrayList();
     private Logger logger;
-    
+
     /**
      * Constructor
      *
@@ -27,16 +32,19 @@ public class DebuggingService {
      */
     public DebuggingService(Logger logger) {
         this.logger = logger;
+
+        this.filters.add(new ClassFilter(ClassFilter.class));
+        this.filters.add(new ClassFilter(MethodFilter.class));
+        this.filters.add(new ClassFilter(DebuggingService.class));
     }
 
     /**
-     * Add a flileter to the service.
+     * Add a filter to the service.
      *
-     * @param mode    of the filter.
-     * @param classes to be effected by the filter.
+     * @param filter to add.
      */
-    public void addFilter(FilterMode mode, List<Class<?>> classes) {
-        this.filters.put(mode, classes);
+    public void addFilter(Filter filter) {
+        this.filters.add(filter);
     }
 
     /**
@@ -57,26 +65,28 @@ public class DebuggingService {
      */
     public void log(LogLevel level, String string) {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        String className = elements[elements.length - 1].getClassName();
-        if (this.filters != null) {
-            boolean foundMatch = (this.filters.containsKey(FilterMode.BLACKLIST));
-            for (Class<?> clazz : this.filters.get(FilterMode.BLACKLIST))
-                if (clazz.getName().equals(className)) {
-                    foundMatch = !foundMatch;
-                    break;
+        Class clazz = elements[elements.length - 1].getClass();
+        Method method = ReflectionUtils.getMethod(clazz, elements[elements.length - 1].getMethodName());
+        try {
+            if (this.filters != null) {
+                for (Filter filter : this.filters) {
+                    if (filter.getClass().equals(MethodFilter.class)) {
+                        if (filter.check(method).shouldHide()) return;
+                    }
+
+                    if (filter.getClass().equals(ClassFilter.class)) {
+                        if (filter.check(clazz).shouldHide()) return;
+                    }
                 }
-            if (!foundMatch) return;
+            }
+        } catch (InvalidSuppliedValueException e) {
+            log(e);
         }
         this.logger.log(Level.ALL, "[" + level.name() + "]" + string);
     }
 
-    /**
-     * Represents the modes of a filter.
-     * WHITELIST: Passes the filter and can be logged.
-     * BLACKLIST: Blocks the classes from being logged.
-     */
-    public enum FilterMode {
-        WHITELIST, BLACKLIST
+    public Logger getLogger() {
+        return logger;
     }
 
     /**
