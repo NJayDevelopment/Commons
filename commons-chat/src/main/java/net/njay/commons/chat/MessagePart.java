@@ -3,7 +3,7 @@ package net.njay.commons.chat;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.gson.stream.JsonWriter;
-import org.bukkit.Bukkit;
+import net.njay.commons.debug.DebuggingService;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * Internal class: Represents a component of a JSON-serializable {@link JSONChatMessageBuilder}.
@@ -54,18 +53,19 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
     TextualComponent text = null;
     String insertionData = null;
     ArrayList<JsonRepresentedObject> translationReplacements = new ArrayList<JsonRepresentedObject>();
+    DebuggingService service;
 
-    MessagePart(final TextualComponent text) {
+    MessagePart(final TextualComponent text, DebuggingService service) {
         this.text = text;
     }
 
-    MessagePart() {
+    MessagePart(DebuggingService service) {
         this.text = null;
     }
 
     @SuppressWarnings("unchecked")
-    public static MessagePart deserialize(Map<String, Object> serialized) {
-        MessagePart part = new MessagePart((TextualComponent) serialized.get("text"));
+    public static MessagePart deserialize(Map<String, Object> serialized, DebuggingService service) {
+        MessagePart part = new MessagePart((TextualComponent) serialized.get("text"), service);
         part.styles = (ArrayList<ChatColor>) serialized.get("styles");
         part.color = ChatColor.getByChar(serialized.get("color").toString());
         part.hoverActionName = (String) serialized.get("hoverActionName");
@@ -135,7 +135,7 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
             }
             json.endObject();
         } catch (IOException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A problem occured during writing of JSON string", e);
+            this.service.log(DebuggingService.LogLevel.WARNING, "A problem occured during writing of JSON string", e);
         }
     }
 
@@ -153,4 +153,11 @@ final class MessagePart implements JsonRepresentedObject, ConfigurationSerializa
         return map;
     }
 
+    public DebuggingService getService() {
+        return service;
+    }
+
+    public void setService(DebuggingService service) {
+        this.service = service;
+    }
 }

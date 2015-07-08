@@ -5,9 +5,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
+import net.njay.commons.debug.DebuggingService;
 import net.njay.commons.nms.NMSUtils;
 import net.njay.commons.nms.ReflectionUtils;
-import org.bukkit.*;
+import org.bukkit.Achievement;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -19,7 +23,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static net.njay.commons.chat.TextualComponent.rawText;
 
@@ -47,19 +51,21 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
     private List<MessagePart> messageParts;
     private String jsonString;
     private boolean dirty;
+    private DebuggingService service;
 
     /**
      * Creates a JSON message with text.
      *
      * @param firstPartText The existing text in the message.
      */
-    public JSONChatMessageBuilder(final String firstPartText) {
-        this(rawText(firstPartText));
+    public JSONChatMessageBuilder(final String firstPartText, DebuggingService service) {
+        this(rawText(firstPartText), service);
     }
 
-    public JSONChatMessageBuilder(final TextualComponent firstPartText) {
+    public JSONChatMessageBuilder(final TextualComponent firstPartText, DebuggingService service) {
+        this.service = service == null ? new DebuggingService(Logger.getGlobal()) : service;
         messageParts = new ArrayList<MessagePart>();
-        messageParts.add(new MessagePart(firstPartText));
+        messageParts.add(new MessagePart(firstPartText, this.service));
         jsonString = null;
         dirty = false;
 
@@ -67,10 +73,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
             try {
                 nmsPacketPlayOutChatConstructor = NMSUtils.getNMSClass("PacketPlayOutChat").getDeclaredConstructor(NMSUtils.getNMSClass("IChatBaseComponent"));
                 nmsPacketPlayOutChatConstructor.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                Bukkit.getLogger().log(Level.SEVERE, "Could not find Minecraft method or constructor.", e);
-            } catch (SecurityException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Could not access constructor.", e);
+            } catch (Exception e) {
+                this.service.log(DebuggingService.LogLevel.SEVERE, "Could not find Minecraft method or constructor.", e);
             }
         }
     }
@@ -78,8 +82,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
     /**
      * Creates a JSON message without text.
      */
-    public JSONChatMessageBuilder() {
-        this((TextualComponent) null);
+    public JSONChatMessageBuilder(DebuggingService service) {
+        this((TextualComponent) null, service);
     }
 
     /**
@@ -90,8 +94,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
      * @param serialized The key-value mapping which represents a fancy message.
      */
     @SuppressWarnings("unchecked")
-    public static JSONChatMessageBuilder deserialize(Map<String, Object> serialized) {
-        JSONChatMessageBuilder msg = new JSONChatMessageBuilder();
+    public static JSONChatMessageBuilder deserialize(Map<String, Object> serialized, DebuggingService service) {
+        JSONChatMessageBuilder msg = new JSONChatMessageBuilder(service);
         msg.messageParts = (List<MessagePart>) serialized.get("messageParts");
         msg.jsonString = serialized.containsKey("JSON") ? serialized.get("JSON").toString() : null;
         msg.dirty = !serialized.containsKey("JSON");
@@ -105,13 +109,13 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
      * @param json The JSON string which represents a fancy message.
      * @return A {@code FancyMessage} representing the parameterized JSON message.
      */
-    public static JSONChatMessageBuilder deserialize(String json) {
+    public static JSONChatMessageBuilder deserialize(String json, DebuggingService service) {
         JsonObject serialized = _stringParser.parse(json).getAsJsonObject();
         JsonArray extra = serialized.getAsJsonArray("extra"); // Get the extra component
-        JSONChatMessageBuilder returnVal = new JSONChatMessageBuilder();
+        JSONChatMessageBuilder returnVal = new JSONChatMessageBuilder(service);
         returnVal.messageParts.clear();
         for (JsonElement mPrt : extra) {
-            MessagePart component = new MessagePart();
+            MessagePart component = new MessagePart(service);
             JsonObject messagePart = mPrt.getAsJsonObject();
             for (Map.Entry<String, JsonElement> entry : messagePart.entrySet()) {
                 // Deserialize text
@@ -149,7 +153,11 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
                         // Assume composite type
                         // The only composite type we currently store is another FancyMessage
                         // Therefore, recursion time!
-                        component.hoverActionData = deserialize(object.get("value").toString() /* This should properly serialize the JSON object as a JSON string */);
+                        try {
+                            component.hoverActionData = deserialize(object.get("value").toString() /* This should properly serialize the JSON object as a JSON string */, service);
+                        } catch (Exception e) {
+                            service.log(e);
+                        }
                     }
                 } else if (entry.getKey().equals("insertion")) {
                     component.insertionData = entry.getValue().getAsString();
@@ -160,7 +168,12 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
                         } else {
                             // Only composite type stored in this array is - again - FancyMessages
                             // Recurse within this function to parse this as a translation replacement
-                            component.translationReplacements.add(deserialize(object.toString()));
+                            try {
+                                component.translationReplacements.add(deserialize(object.toString(), service));
+
+                            } catch (Exception e) {
+                                service.log(e);
+                            }
                         }
                     }
                 }
@@ -324,14 +337,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         try {
             Object achievement = ReflectionUtils.getMethod_(NMSUtils.getCraftClass("CraftStatistic"), "getNMSAchievement", Achievement.class).invoke(null, which);
             return achievementTooltip((String) ReflectionUtils.getField(NMSUtils.getNMSClass("Achievement"), "name").get(achievement));
-        } catch (IllegalAccessException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
-            return this;
-        } catch (IllegalArgumentException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Argument could not be passed.", e);
-            return this;
-        } catch (InvocationTargetException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A error has occured durring invoking of method.", e);
+        } catch (Exception e) {
+            this.service.log(e);
             return this;
         }
     }
@@ -352,14 +359,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         try {
             Object statistic = ReflectionUtils.getMethod_(NMSUtils.getCraftClass("CraftStatistic"), "getNMSStatistic", Statistic.class).invoke(null, which);
             return achievementTooltip((String) ReflectionUtils.getField(NMSUtils.getNMSClass("Statistic"), "name").get(statistic));
-        } catch (IllegalAccessException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
-            return this;
-        } catch (IllegalArgumentException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Argument could not be passed.", e);
-            return this;
-        } catch (InvocationTargetException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A error has occured durring invoking of method.", e);
+        } catch (Exception e) {
+            this.service.log(e);
             return this;
         }
     }
@@ -384,14 +385,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         try {
             Object statistic = ReflectionUtils.getMethod_(NMSUtils.getCraftClass("CraftStatistic"), "getMaterialStatistic", Statistic.class, Material.class).invoke(null, which, item);
             return achievementTooltip((String) ReflectionUtils.getField(NMSUtils.getNMSClass("Statistic"), "name").get(statistic));
-        } catch (IllegalAccessException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
-            return this;
-        } catch (IllegalArgumentException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Argument could not be passed.", e);
-            return this;
-        } catch (InvocationTargetException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A error has occured durring invoking of method.", e);
+        } catch (Exception e) {
+            this.service.log(e);
             return this;
         }
     }
@@ -416,14 +411,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         try {
             Object statistic = ReflectionUtils.getMethod_(NMSUtils.getCraftClass("CraftStatistic"), "getEntityStatistic", Statistic.class, EntityType.class).invoke(null, which, entity);
             return achievementTooltip((String) ReflectionUtils.getField(NMSUtils.getNMSClass("Statistic"), "name").get(statistic));
-        } catch (IllegalAccessException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
-            return this;
-        } catch (IllegalArgumentException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Argument could not be passed.", e);
-            return this;
-        } catch (InvocationTargetException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A error has occured durring invoking of method.", e);
+        } catch (Exception e) {
+            this.service.log(e);
             return this;
         }
     }
@@ -452,7 +441,7 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
             Object nmsItem = ReflectionUtils.getMethod_(NMSUtils.getCraftClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class).invoke(null, itemStack);
             return itemTooltip(ReflectionUtils.getMethod_(NMSUtils.getNMSClass("ItemStack"), "save", NMSUtils.getNMSClass("NBTTagCompound")).invoke(nmsItem, NMSUtils.getNMSClass("NBTTagCompound").newInstance()).toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            this.service.log(e);
             return this;
         }
     }
@@ -520,7 +509,7 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
             return this;
         }
 
-        JSONChatMessageBuilder result = new JSONChatMessageBuilder();
+        JSONChatMessageBuilder result = new JSONChatMessageBuilder(this.service);
         result.messageParts.clear(); // Remove the one existing text component that exists by default, which destabilizes the object
 
         for (int i = 0; i < lines.length; i++) {
@@ -536,10 +525,10 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
                     }
                 }
                 if (i != lines.length - 1) {
-                    result.messageParts.add(new MessagePart(rawText("\n")));
+                    result.messageParts.add(new MessagePart(rawText("\n"), service));
                 }
             } catch (CloneNotSupportedException e) {
-                Bukkit.getLogger().log(Level.WARNING, "Failed to clone object", e);
+                this.service.log(DebuggingService.LogLevel.WARNING, "Failed to clone object", e);
                 return this;
             }
         }
@@ -599,7 +588,7 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         if (!latest().hasText()) {
             throw new IllegalStateException("previous message part has no text");
         }
-        messageParts.add(new MessagePart(text));
+        messageParts.add(new MessagePart(text, service));
         dirty = true;
         return this;
     }
@@ -614,7 +603,7 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
         if (!latest().hasText()) {
             throw new IllegalStateException("previous message part has no text");
         }
-        messageParts.add(new MessagePart());
+        messageParts.add(new MessagePart(service));
         dirty = true;
         return this;
     }
@@ -674,18 +663,8 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
             Object handle = NMSUtils.getHandle(player);
             Object connection = ReflectionUtils.getField(handle.getClass(), "playerConnection").get(handle);
             ReflectionUtils.getMethod_(connection.getClass(), "sendPacket", NMSUtils.getNMSClass("Packet")).invoke(connection, createChatPacket(jsonString));
-        } catch (IllegalArgumentException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Argument could not be passed.", e);
-        } catch (IllegalAccessException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not access method.", e);
-        } catch (InstantiationException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Underlying class is abstract.", e);
-        } catch (InvocationTargetException e) {
-            Bukkit.getLogger().log(Level.WARNING, "A error has occured durring invoking of method.", e);
-        } catch (NoSuchMethodException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not find method.", e);
-        } catch (ClassNotFoundException e) {
-            Bukkit.getLogger().log(Level.WARNING, "Could not find class.", e);
+        } catch (Exception e) {
+            this.service.log(e);
         }
     }
 
@@ -701,16 +680,20 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
     public Object getBaseComponent(String json) throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, ClassNotFoundException {
         if (nmsChatSerializerGsonInstance == null) {
             // Find the field and its value, completely bypassing obfuscation
-            Class<?> chatSerializerClazz;
+            Class<?> chatSerializerClazz = null;
 
             String version = NMSUtils.version;
             double majorVersion = Double.parseDouble(version.replace('_', '.').substring(1, 4));
             int lesserVersion = Integer.parseInt(version.substring(6, 7));
 
-            if (majorVersion < 1.8 || (majorVersion == 1.8 && lesserVersion == 1)) {
-                chatSerializerClazz = NMSUtils.getNMSClass("ChatSerializer");
-            } else {
-                chatSerializerClazz = NMSUtils.getNMSClass("IChatBaseComponent$ChatSerializer");
+            try {
+                if (majorVersion < 1.8 || (majorVersion == 1.8 && lesserVersion == 1)) {
+                    chatSerializerClazz = NMSUtils.getNMSClass("ChatSerializer");
+                } else {
+                    chatSerializerClazz = NMSUtils.getNMSClass("IChatBaseComponent$ChatSerializer");
+                }
+            } catch (Exception e) {
+                this.service.log(e);
             }
 
             if (chatSerializerClazz == null) {
@@ -730,7 +713,12 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
 
         // Since the method is so simple, and all the obfuscated methods have the same name, it's easier to reimplement 'IChatBaseComponent a(String)' than to reflectively call it
         // Of course, the implementation may change, but fuzzy matches might break with signature changes
-        return fromJsonMethod.invoke(nmsChatSerializerGsonInstance, json, NMSUtils.getNMSClass("IChatBaseComponent"));
+        try {
+            return fromJsonMethod.invoke(nmsChatSerializerGsonInstance, json, NMSUtils.getNMSClass("IChatBaseComponent"));
+        } catch (Exception e) {
+            this.service.log(e);
+        }
+        return null;
     }
 
     /**
@@ -818,5 +806,13 @@ public class JSONChatMessageBuilder implements JsonRepresentedObject, Cloneable,
      */
     public Iterator<MessagePart> iterator() {
         return messageParts.iterator();
+    }
+
+    public DebuggingService getService() {
+        return service;
+    }
+
+    public void setService(DebuggingService service) {
+        this.service = service;
     }
 }
