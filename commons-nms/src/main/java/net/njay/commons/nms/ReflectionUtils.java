@@ -11,16 +11,9 @@ public class ReflectionUtils {
      * @param field_name name of the field.
      * @return the field.
      */
-    public static Field getField(Class<?> cl, String field_name) {
-        try {
-            Field field = cl.getDeclaredField(field_name);
-            return field;
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public static Field getField(Class<?> cl, String field_name) throws Exception {
+        Field field = cl.getDeclaredField(field_name);
+        return field;
     }
 
     /**

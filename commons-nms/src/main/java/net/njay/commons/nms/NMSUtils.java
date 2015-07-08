@@ -4,7 +4,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class NMSUtils {
@@ -30,14 +29,10 @@ public class NMSUtils {
      * @param name name of the class without .class
      * @return the referenced class.
      */
-    public static Class<?> getNMSClass(String name) {
+    public static Class<?> getNMSClass(String name) throws Exception {
         String className = "net.minecraft.server." + version + name;
         Class<?> c = null;
-        try {
-            c = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        c = Class.forName(className);
         return c;
     }
 
@@ -47,18 +42,10 @@ public class NMSUtils {
      * @param world world to get the handle for.
      * @return the craft handle.
      */
-    public static Object getHandle(World world) {
+    public static Object getHandle(World world) throws Exception {
         Object nms_entity = null;
         Method entity_getHandle = ReflectionUtils.getMethod(world.getClass(), "getHandle");
-        try {
-            nms_entity = entity_getHandle.invoke(world);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        nms_entity = entity_getHandle.invoke(world);
         return nms_entity;
     }
 
@@ -68,18 +55,10 @@ public class NMSUtils {
      * @param entity entity to get the handle for.
      * @return the craft handle.
      */
-    public static Object getHandle(Entity entity) {
+    public static Object getHandle(Entity entity) throws Exception {
         Object nms_entity = null;
         Method entity_getHandle = ReflectionUtils.getMethod(entity.getClass(), "getHandle");
-        try {
-            nms_entity = entity_getHandle.invoke(entity);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        nms_entity = entity_getHandle.invoke(entity);
         return nms_entity;
     }
 
@@ -90,15 +69,10 @@ public class NMSUtils {
      * @param className The name of the class, excluding the package, within OBC. This name may contain a subpackage name, such as {@code inventory.CraftItemStack}.
      * @return The class instance representing the specified CraftBukkit class, or {@code null} if it could not be loaded.
      */
-    public synchronized static Class<?> getCraftClass(String className) {
+    public synchronized static Class<?> getCraftClass(String className) throws Exception {
         String fullName = "org.bukkit.craftbukkit." + version + className;
         Class<?> clazz = null;
-        try {
-            clazz = Class.forName(fullName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        clazz = Class.forName(fullName);
         return clazz;
     }
 }
