@@ -29,7 +29,7 @@ public class UIActionBar {
      */
     public UIActionBar(String json) {
         try {
-            this.baseComponent = JSONChatMessageBuilder.deserialize(json).getBaseComponent();
+            this.baseComponent = JSONChatMessageBuilder.deserialize(json, getManager().getService()).getBaseComponent();
         } catch (Exception e) {
             manager.getService().log(e);
         }
@@ -42,7 +42,7 @@ public class UIActionBar {
      * @param color color of the text; if null, white.
      */
     public UIActionBar(String text, ChatColor color) {
-        JSONChatMessageBuilder builder = new JSONChatMessageBuilder(text).color(color == null ? ChatColor.WHITE : color);
+        JSONChatMessageBuilder builder = new JSONChatMessageBuilder(getManager().getService()).text(text).color(color == null ? ChatColor.WHITE : color);
         try {
             this.baseComponent = builder.getBaseComponent();
         } catch (Exception e) {

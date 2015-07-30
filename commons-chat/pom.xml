@@ -12,10 +12,11 @@
     <artifactId>commons-chat</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
     <dependencies>
         <dependency>
             <groupId>net.njay</groupId>
-            <artifactId>commons-nms</artifactId>
+            <artifactId>commons-debug</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
