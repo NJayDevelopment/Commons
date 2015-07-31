@@ -13,7 +13,6 @@
         <module>commons-nms</module>
         <module>commons-debug</module>
 
-        <module>commons-commands</module>
         <module>commons-countdowns</module>
         <module>commons-ui</module>
         <module>commons-chat</module>
